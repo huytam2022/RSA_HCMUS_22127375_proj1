@@ -23,58 +23,7 @@ uint32_t hexCharToValue(char c) {
 void multiplyByBase16(LargeInt& number) {
     uint64_t carryOver = 0;
     for (auto& digit : number) {
-        uint64_t result = static_cast<uint64_t>(digit) * 16 + carryOver;
-        digit = result % RADIX;
-        carryOver = result / RADIX;
-    }
-    if (carryOver) number.push_back(carryOver);
-}
-
-// Add digit to BigInt
-void appendDigit(LargeInt& number, uint32_t value) {
-    uint64_t carry = value;
-    for (auto& digit : number) {
-        uint64_t sum = static_cast<uint64_t>(digit) + carry;
-        digit = sum % RADIX;
-        carry = sum / RADIX;
-        if (carry == 0) break;
-    }
-    if (carry) number.push_back(carry);
-}
-
-// Convert hex string to BigInt
-LargeInt hexToLargeInt(const string& hex) {
-    LargeInt result(1, 0);
-    for (char c : hex) {
-        multiplyByBase16(result);
-        appendDigit(result, hexCharToValue(c));
-    }
-    return result;
-}
-
-// Print BigInt
-void displayLargeInt(const LargeInt& number) {
-    if (number.empty()) {
-        cout << "0\n";
-        return;
-    }
-    cout << number.back();
-    for (int i = number.size() - 2; i >= 0; --i) {
-        cout << setw(9) << setfill('0') << number[i];
-    }
-    cout << endl;
-}
-
-// Compare two LargeInts
-int compareLargeInts(const LargeInt& x, const LargeInt& y) {
-    if (x.size() != y.size()) return (x.size() > y.size()) ? 1 : -1;
-    for (size_t i = x.size(); i-- > 0;) {
-        if (x[i] != y[i]) return (x[i] > y[i]) ? 1 : -1;
-    }
-    return 0;
-}
-
-// Add two BigInt
+        uint64_t LargeInts
 LargeInt addLargeInts(const LargeInt& a, const LargeInt& b) {
     LargeInt sum;
     size_t maxLength = max(a.size(), b.size());
@@ -92,7 +41,7 @@ LargeInt addLargeInts(const LargeInt& a, const LargeInt& b) {
     return sum;
 }
 
-// Multiply two BigInt
+// Multiply two LargeInts
 LargeInt multiplyLargeInts(const LargeInt& a, const LargeInt& b) {
     LargeInt product(a.size() + b.size(), 0);
     for (size_t i = 0; i < a.size(); ++i) {
@@ -108,7 +57,7 @@ LargeInt multiplyLargeInts(const LargeInt& a, const LargeInt& b) {
     return product;
 }
 
-// Subtract two BigInts (a - b)
+// Subtract two LargeInts (a - b)
 LargeInt subtractLargeInts(const LargeInt& a, const LargeInt& b) {
     LargeInt result = a;
     int64_t borrow = 0; // Variable to store the borrow for subtraction
@@ -119,7 +68,7 @@ LargeInt subtractLargeInts(const LargeInt& a, const LargeInt& b) {
 
         // If the current digit in 'a' is smaller than the value to subtract, borrow
         if (result[i] < sub) {
-            result[i] += RADIX - sub;  // Add BASE (RADIX) and subtract
+            result[i] += RADIX - sub;  // Add RADIX and subtract
             borrow = 1;                 // Set borrow for the next iteration
         }
         else {
@@ -136,7 +85,7 @@ LargeInt subtractLargeInts(const LargeInt& a, const LargeInt& b) {
     return result;
 }
 
-// Devide two BigInt
+// Devide two LargeInts
 pair<LargeInt, LargeInt> divideLargeInts(const LargeInt& dividend, const LargeInt& divisor) {
     if (compareLargeInts(divisor, { 0 }) == 0) throw invalid_argument("Division by zero");
     if (compareLargeInts(dividend, divisor) < 0) return { {0}, dividend };
