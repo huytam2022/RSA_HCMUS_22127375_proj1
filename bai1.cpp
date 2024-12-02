@@ -19,7 +19,7 @@ uint32_t hexCharToValue(char c) {
     throw invalid_argument("Invalid hexadecimal character");
 }
 
-// Multiply by base 16
+// Multiply LargeInt by 16
 void multiplyByBase16(LargeInt& number) {
     uint64_t carryOver = 0;
     for (auto& digit : number) {
